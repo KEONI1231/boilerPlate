@@ -22,6 +22,7 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
                 && parameter.hasParameterAnnotation(UserId.class);
     }
 
+
     @Override
     public Object resolveArgument(@NonNull MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,

@@ -1,10 +1,12 @@
 package com.mooko.dev.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mooko.dev.contrant.Constants;
 import com.mooko.dev.intercepter.pre.UserIdArgumentResolver;
 import com.mooko.dev.intercepter.pre.UserIdInterceptor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;

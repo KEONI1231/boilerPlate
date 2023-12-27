@@ -1,6 +1,7 @@
 package com.mooko.dev.domain;
 
 import com.mooko.dev.dto.type.ERole;
+import com.mooko.dev.dto.type.ESocialType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,6 +37,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private ERole role;  //회원가입시 기본값은 GUEST, 추가가입 후에는 USER
 
+    @Enumerated(EnumType.STRING)
+    private ESocialType socialType;
+
     @Column(name = "is_login", columnDefinition = "TINYINT(1)")
     private boolean isLogin;        //0은 false, 1은 true
 
@@ -43,11 +47,28 @@ public class User {
     private String refreshToken;
 
     @Builder
-    public User(String serialId, String nickname, String profileImageUrl) {
+    public User(String serialId, String nickname, String profileImageUrl, LocalDate createdDate, ERole role, ESocialType socialType, boolean isLogin, String refreshToken) {
         this.serialId = serialId;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
-        this.createdDate = LocalDate.now();
+        this.createdDate = createdDate;
+        this.role = role;
+        this.socialType = socialType;
+        this.isLogin = isLogin;
+        this.refreshToken = refreshToken;
     }
 
+    public static User createUser(String serialId, ESocialType socialType) {
+        return User.builder()
+                .serialId(serialId)
+                .createdDate(LocalDate.now())
+                .role(ERole.GUEST)
+                .socialType(socialType)
+                .isLogin(true)
+                .build();
+    }
+
+    public void updateLoginStatus(boolean isLogin) {
+        this.isLogin = isLogin;
+    }
 }

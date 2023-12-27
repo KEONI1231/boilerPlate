@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByIdAndRefreshTokenAndIsLogin(Long id, String refreshToken, Boolean isLogin);
 
+    Optional<User> findBySerialId(String serialId);
+
     @Query("select u.id as id, u.role as role from User u where u.serialId = :serialId")
     Optional<UserSecurityForm> findSecurityFormBySerialId(String serialId);
 
@@ -27,6 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     interface UserSecurityForm {
         Long getId();
+
         ERole getRole();
     }
 

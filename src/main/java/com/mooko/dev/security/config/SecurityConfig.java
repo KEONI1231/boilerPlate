@@ -5,8 +5,12 @@ import com.mooko.dev.security.filter.JwtAuthenticationFilter;
 import com.mooko.dev.security.filter.JwtExceptionFilter;
 import com.mooko.dev.security.handler.jwt.JwtAccessDeniedHandler;
 import com.mooko.dev.security.handler.jwt.JwtAuthEntryPoint;
+import com.mooko.dev.security.handler.signin.DefaultFailureHandler;
+import com.mooko.dev.security.handler.signin.DefaultSuccessHandler;
+import com.mooko.dev.security.handler.signin.OAuth2SuccessHandler;
 import com.mooko.dev.security.handler.singout.CustomSignOutResultHandler;
 import com.mooko.dev.security.service.CustomUserDetailService;
+import com.mooko.dev.security.service.CustomOAuth2UserService;
 import com.mooko.dev.utility.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import com.mooko.dev.security.filter.GlobalLoggerFilter;
@@ -25,6 +29,10 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 public class SecurityConfig {
     private final CustomSignOutResultHandler customSignOutProcessHandler;
     private final CustomSignOutResultHandler customSignOutResultHandler;
+    private final DefaultSuccessHandler defaultSuccessHandler;
+    private final DefaultFailureHandler defaultFailureHandler;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
@@ -58,6 +66,13 @@ public class SecurityConfig {
                         configurer
                                 .authenticationEntryPoint(jwtAuthEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
+                .oauth2Login(config -> config
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureHandler(defaultFailureHandler)
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService)
+                        )
                 )
 
                 .addFilterBefore(

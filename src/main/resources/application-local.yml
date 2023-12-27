@@ -52,9 +52,9 @@ spring:
         region: ap-northeast-2
 
 jwt:
-  secret-Key: asdfasdfasdfasdrt123a1241qwetqpknapilugipk1j23k4lhj1adfkj9312kl3nasdkflj9Nvlnyasdf
-  access-token-expire-period: 7200
-  refresh-token-expire-period: 1209600
+  secret-Key: asdfasdfasdfasdrt123a1241qwetqpknapilugipk1j23k4lhj1adfkj9312kl3nasdkflj9Nvlnyasdfakljf891023jhlkasdf91nkhldf91kjlas90dfjl1k29azalikdjf912kjl3lasd9f0j1kl239asdjlkf
+  access-token-expire-period: 7200      #2시간
+  refresh-token-expire-period: 1209600  #2주
 
 
 

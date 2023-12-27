@@ -1,33 +1,42 @@
 package com.mooko.dev.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@Entity
-@Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Table(name = "day_photo")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(name = "day_photos")
 public class DayPhoto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "day_photo_id_seq")
-    @SequenceGenerator(name = "day_photo_id_seq", sequenceName = "day_photo_id_seq")
-    @Column(name = "day_photo_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String url;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
+    @Column(name = "thumbnail", nullable = false)
     private boolean thumbnail;
+
+    @Column(name = "created_date", nullable = false)
+    private LocalDate createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "day_id")
     private Day day;
 
-    private LocalDateTime createdAt;
-
+    @Builder
+    public DayPhoto(String imageUrl, boolean thumbnail, Day day) {
+        this.imageUrl = imageUrl;
+        this.thumbnail = thumbnail;
+        this.day = day;
+        this.createdDate = LocalDate.now();
+    }
 }

@@ -1,54 +1,46 @@
 package com.mooko.dev.domain;
 
-
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.UUID;
 
-@Entity
-@Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "events")
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
-    @SequenceGenerator(name = "event_id_seq", sequenceName = "event_id_seq")
-    @Column(name = "event_id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    private UUID id;
 
+    @Column(name = "title", nullable = false)
     private String title;
 
-    private String startDate;
-    private String endDate;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private List<EventPhoto> eventPhotos = new ArrayList<>();
+    private LocalDate createdDate;
 
-    private LocalDateTime createdAt;
-
-    public void updateEventName(String eventName) {
-        this.title = eventName;
-    }
-
-    public void updateEventDate(String startDate, String endDate) {
+    @Builder
+    public Event(String title, LocalDate startDate, LocalDate endDate, User user) {
+        this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public void updateEventPhoto(List<EventPhoto> eventPhotos) {
-        this.eventPhotos = eventPhotos;
+        this.user = user;
+        this.createdDate = LocalDate.now();
     }
 
 }

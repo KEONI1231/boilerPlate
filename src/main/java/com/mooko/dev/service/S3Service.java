@@ -1,67 +1,22 @@
 package com.mooko.dev.service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.mooko.dev.configuration.S3Config;
-import com.mooko.dev.exception.custom.CustomException;
-import com.mooko.dev.exception.custom.ErrorCode;
+import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.UUID;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
-@Service
 @RequiredArgsConstructor
-@Slf4j
 public class S3Service {
 
-    private final AmazonS3Client amazonS3Client;
-    private final S3Config s3Config;
+    private S3Template s3Template;
+    public void uploadFile() throws FileNotFoundException {
+        File file = new File("file");
+        FileInputStream fileInputStream = new FileInputStream(file);
 
-    public String putFileToS3(File file, String fileName, String directory) {
-        try {
-            String fullPath = directory + fileName;
-            amazonS3Client.putObject(new PutObjectRequest(s3Config.getBucket(), fullPath, file));
+        s3Template.upload("bucket", "key", fileInputStream);
 
-            return amazonS3Client.getUrl(s3Config.getBucket(), fullPath).toString();
-        } catch (AmazonS3Exception e) {
-            log.error("putFileError");
-            throw new CustomException(ErrorCode.S3_ERROR);
-        }
     }
-
-
-
-    public String convertToRelativePath(String absolutePath) throws URISyntaxException {
-        URI uri = new URI(absolutePath);
-        String path = uri.getPath();
-        return path.substring(s3Config.getBucket().length() + 2);
-    }
-
-
-    public void deleteFromS3(String absolutePath) {
-        try {
-            String relativePath = convertToRelativePath(absolutePath);
-            amazonS3Client.deleteObject(s3Config.getBucket(), relativePath);
-        } catch (AmazonS3Exception | URISyntaxException e) {
-            log.error(e.getMessage());
-            log.error("deleteFileError");
-            throw new CustomException(ErrorCode.S3_ERROR);
-        }
-    }
-
-
-    public String makefileName() {
-        return UUID.randomUUID() + ".jpg";
-    }
-
-
-
-
-
 }

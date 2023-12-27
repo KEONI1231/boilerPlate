@@ -23,10 +23,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update User u set u.refreshToken = :refreshToken, u.isLogin = :isLogin where u.id = :id")
-    void updateRefreshTokenAndLoginStatus(UUID id, String refreshToken, Boolean isLogin);
+    void updateRefreshTokenAndLoginStatus(Long id, String refreshToken, Boolean isLogin);
 
     interface UserSecurityForm {
-        UUID getId();
+        Long getId();
         ERole getRole();
     }
 

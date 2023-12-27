@@ -36,7 +36,7 @@ public class JwtUtil implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public JwtTokenDto generateTokens(UUID id, ERole role) {
+    public JwtTokenDto generateTokens(Long id, ERole role) {
         return new JwtTokenDto(
                 generateToken(id, role, accessTokenExpirePeriod * 1000),
                 generateToken(id, null, refreshTokenExpirePeriod * 1000));
@@ -50,7 +50,7 @@ public class JwtUtil implements InitializingBean {
                 .getBody();
     }
 
-    private String generateToken(UUID id, ERole role, Integer expirePeriod) {
+    private String generateToken(Long id, ERole role, Integer expirePeriod) {
         Claims claims = Jwts.claims();
         claims.put(Constants.USER_ID_CLAIM_NAME, id);
         if (role != null)

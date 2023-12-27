@@ -16,7 +16,7 @@ import java.util.UUID;
 @Builder
 @RequiredArgsConstructor
 public class UserPrincipal implements UserDetails {
-    @Getter private final UUID id;
+    @Getter private final Long id;
     @Getter private final ERole role;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
@@ -25,7 +25,6 @@ public class UserPrincipal implements UserDetails {
         return UserPrincipal.builder()
                 .id(form.getId())
                 .role(form.getRole())
-                .password(form.getPassword())
                 .authorities(Collections.singleton(new SimpleGrantedAuthority(form.getRole().getSecurityName())))
                 .build();
     }

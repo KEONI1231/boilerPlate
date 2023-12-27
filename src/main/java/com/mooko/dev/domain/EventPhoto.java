@@ -1,32 +1,39 @@
 package com.mooko.dev.domain;
 
-
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@Entity
-@Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Table(name = "event_photo")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(name = "event_photos")
 public class EventPhoto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_photo_id_seq")
-    @SequenceGenerator(name = "event_photo_id_seq", sequenceName = "event_photo_id_seq")
-    @Column(name = "event_photo_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String url;
-
-    private LocalDateTime createdAt;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @Column(name = "created_date", nullable = false)
+    private LocalDate createdDate;
+
+    @Builder
+    public EventPhoto(String imageUrl, Event event) {
+        this.imageUrl = imageUrl;
+        this.event = event;
+        this.createdDate = LocalDate.now();
+    }
 
 }

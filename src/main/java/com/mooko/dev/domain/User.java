@@ -1,55 +1,52 @@
 package com.mooko.dev.domain;
 
+import com.mooko.dev.dto.type.ERole;
 import jakarta.persistence.*;
-import java.io.File;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.UUID;
 
-@Entity
-@Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
-    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", initialValue = 1, allocationSize = 50)
-    @Column(name = "user_id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    private UUID id;
 
+    @Column(name = "serial_id", nullable = false, unique = true)
+    private String serialId; //socialId
+
+    @Column(name = "nickname")
     private String nickname;
-    private String profileUrl;
+
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Column(name = "created_date", nullable = false)
+    private LocalDate createdDate;
+
+    @Enumerated(EnumType.STRING)
+    private ERole role;  //회원가입시 기본값은 GUEST, 추가가입 후에는 USER
+
+    @Column(name = "is_login", columnDefinition = "TINYINT(1)")
+    private boolean isLogin;        //0은 false, 1은 true
+
+    @Column(name = "refresh_token")
     private String refreshToken;
-    private String socialId;
-    private LocalDateTime createdAt;
-    private String birth;
-    private String gender;
-    private String dateOfIssue;     //유저가 회원가입했을때의 시점으로
 
-    @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Event> event = new ArrayList<>();
-
-
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public void updateUserInfo(String profileUrl, String nickname,
-            String birth, String gender){
-        this.profileUrl = profileUrl;
+    @Builder
+    public User(String serialId, String nickname, String profileImageUrl) {
+        this.serialId = serialId;
         this.nickname = nickname;
-        this.birth = birth;
-        this.gender = gender;
+        this.profileImageUrl = profileImageUrl;
+        this.createdDate = LocalDate.now();
     }
 
-    public void updateEvent(Event event) {
-        this.event.add(event);
-    }
 }

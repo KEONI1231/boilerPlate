@@ -4,6 +4,7 @@ spring:
     username: mooko-admin
     password: mooko-admin
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   servlet:
     multipart:
       max-file-size: 2MB
@@ -15,6 +16,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   security:
     oauth2:

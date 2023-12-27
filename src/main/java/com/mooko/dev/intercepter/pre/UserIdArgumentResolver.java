@@ -2,6 +2,7 @@ package com.mooko.dev.intercepter.pre;
 
 
 import com.mooko.dev.annotation.UserId;
+import com.mooko.dev.dto.type.ErrorCode;
 import com.mooko.dev.exception.CommonException;
 import lombok.NonNull;
 import org.springframework.core.MethodParameter;

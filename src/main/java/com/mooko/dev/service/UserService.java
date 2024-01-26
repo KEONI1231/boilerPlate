@@ -2,7 +2,6 @@ package com.mooko.dev.service;
 
 import com.mooko.dev.domain.User;
 import com.mooko.dev.repository.UserRepository;
-import com.mooko.dev.security.info.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

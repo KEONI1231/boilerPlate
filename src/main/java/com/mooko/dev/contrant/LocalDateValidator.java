@@ -23,14 +23,12 @@ public class LocalDateValidator implements ConstraintValidator<Date, String> {
         if (value == null || value.isEmpty()) {
             return false;
         }
-
         try {
-            LocalDate.parse(value, DATE_FORMATTER);
-        } catch(DateTimeParseException e) {
+            DATE_FORMATTER.parse(value);
+        } catch (DateTimeParseException e) {
             log.error("Invalid Date Format. (yyyy-MM-dd)");
             return false;
         }
-
         return true;
     }
 }

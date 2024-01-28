@@ -20,7 +20,7 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterType().equals(Long.class)
-                && parameter.hasParameterAnnotation(UserId.class);
+                && parameter.hasParameterAnnotation(UserId.class); //true or false
     }
 
 
@@ -29,12 +29,11 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
-        final Object userIdObj = webRequest.getAttribute("USER_ID", WebRequest.SCOPE_REQUEST);
-
+        final Object userIdObj
+                = webRequest.getAttribute("USER_ID", WebRequest.SCOPE_REQUEST);
         if (userIdObj == null) {
             throw new CommonException(ErrorCode.INVALID_HEADER_ERROR);
         }
-
         return Long.valueOf(userIdObj.toString());
     }
 }

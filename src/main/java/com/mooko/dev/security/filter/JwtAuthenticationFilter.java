@@ -21,15 +21,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor //필터는 서블릿이 제공.
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailService customUserDetailService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+
         String token = HeaderUtil.refineHeader(request, Constants.AUTHORIZATION_HEADER, Constants.BEARER_PREFIX)
                 .orElseThrow(() -> new IllegalArgumentException("Authorization Header Is Not Found!"));
         Claims claims = jwtUtil.validateToken(token);

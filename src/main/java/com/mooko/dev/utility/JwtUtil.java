@@ -36,6 +36,8 @@ public class JwtUtil implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    //스프링 빈의 프로퍼티가 설정된 후 비밀 키를 초기화.
+    //
     public JwtTokenDto generateTokens(Long id, ERole role) {
         return new JwtTokenDto(
                 generateToken(id, role, accessTokenExpirePeriod * 1000),

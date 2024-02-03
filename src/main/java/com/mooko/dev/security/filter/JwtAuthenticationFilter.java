@@ -33,22 +33,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 접두사를 Request Header에서 접두사를 제거한 토큰 추출.
         String token = HeaderUtil.refineHeader(request, Constants.AUTHORIZATION_HEADER, Constants.BEARER_PREFIX)
                 .orElseThrow(() -> new IllegalArgumentException("Authorization Header Is Not Found!"));
+
+
+        //토큰 유효성 검증, 토큰에 담긴 정보 조각(클레임 추출)
         Claims claims = jwtUtil.validateToken(token);
 
+        //UserPrincipal : 인증된 사용자 정보
         UserPrincipal userPrincipal = (UserPrincipal) customUserDetailService.loadUserById(
                 claims.get(Constants.USER_ID_CLAIM_NAME, Long.class));
 
+        //credential이 null? 그냥 null로 하더라.
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userPrincipal, null, userPrincipal.getAuthorities());
 
+        //생성된 인증 토큰에 요청과 관련된 상세 정보를 추가.
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+        //보안 컨텍스트 설정.
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authenticationToken);
         SecurityContextHolder.setContext(context);
 
+        //현재 필터의 처리가 완료된 후 요청이 필터 체인을 따라 다음 필터로 이동 또는 컨트롤러에 도달하도록 함.
         filterChain.doFilter(request, response);
     }
 

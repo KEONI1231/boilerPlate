@@ -26,18 +26,29 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
+                                        Authentication authentication)
+            throws IOException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        JwtTokenDto tokenDto = jwtUtil.generateTokens(customOAuth2User.getId(), customOAuth2User.getRole());
-        userRepository.updateRefreshTokenAndLoginStatus(customOAuth2User.getId(), tokenDto.refreshToken(), true);
+
+        JwtTokenDto tokenDto = jwtUtil.generateTokens(customOAuth2User.getId(),
+                customOAuth2User.getRole());
+        userRepository.updateRefreshTokenAndLoginStatus(customOAuth2User.getId(),
+                tokenDto.refreshToken(),
+                true);
 
 
         setSuccessWebResponse(response, tokenDto);
     }
 
-    private void setSuccessWebResponse(HttpServletResponse response, JwtTokenDto tokenDto) throws IOException {
-        CookieUtil.addCookie(response, "access_token", tokenDto.accessToken());
-        CookieUtil.addSecureCookie(response, "refresh_token", tokenDto.refreshToken(), jwtUtil.getRefreshTokenExpirePeriod());
+    private void setSuccessWebResponse(HttpServletResponse response, JwtTokenDto tokenDto)
+            throws IOException {
+        CookieUtil.addCookie(response,
+                "access_token",
+                tokenDto.accessToken());
+        CookieUtil.addSecureCookie(response,
+                "refresh_token",
+                tokenDto.refreshToken(),
+                jwtUtil.getRefreshTokenExpirePeriod());
 
         response.sendRedirect("http://localhost:3000");
     }

@@ -30,20 +30,21 @@ public class JwtUtil implements InitializingBean {
 
     private Key key;
 
+
+    //스프링 빈의 프로퍼티가 설정된 후 비밀 키를 초기화.
     @Override
     public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
-
-    //스프링 빈의 프로퍼티가 설정된 후 비밀 키를 초기화.
-    //
+    //주어진 사용자 ID와 역할을 기반으로 접근 토큰과 새로고침 토큰을 생성.
     public JwtTokenDto generateTokens(Long id, ERole role) {
         return new JwtTokenDto(
-                generateToken(id, role, accessTokenExpirePeriod * 1000),
-                generateToken(id, null, refreshTokenExpirePeriod * 1000));
+                generateToken(id, role, accessTokenExpirePeriod * 1000), //어세스 토큰 생성
+                generateToken(id, null, refreshTokenExpirePeriod * 1000)); //리프레시 토큰 생성.
     }
 
+    //validateToken(String token) : 제공된 jwt 토큰이 유효한지 검증하고, 토큰의 클레임을 반환.
     public Claims validateToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -52,6 +53,7 @@ public class JwtUtil implements InitializingBean {
                 .getBody();
     }
 
+    //주어진 정보를 바탕으로 실제 jwt 토큰 생성.
     private String generateToken(Long id, ERole role, Integer expirePeriod) {
         Claims claims = Jwts.claims();
         claims.put(Constants.USER_ID_CLAIM_NAME, id);

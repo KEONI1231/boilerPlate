@@ -15,5 +15,5 @@ public class Constants {
             "/login/oauth2/code/kakao",
             "/api-docs.html",
             "/api-docs/**",
-            "/swagger-ui/**");
+            "/swagger-ui/**"); //WhiteList 인듯
 }

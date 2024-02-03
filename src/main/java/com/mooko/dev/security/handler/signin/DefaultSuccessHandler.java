@@ -22,22 +22,35 @@ public class DefaultSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    //로그인이 안되어있는 시점에서 처음 로그인 할때.
+    //
     @Override
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
+
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        JwtTokenDto tokenDto = jwtUtil.generateTokens(userPrincipal.getId(), userPrincipal.getRole());
-        userRepository.updateRefreshTokenAndLoginStatus(userPrincipal.getId(), tokenDto.refreshToken(), true);
+
+        JwtTokenDto tokenDto = jwtUtil.generateTokens(userPrincipal.getId(),
+                userPrincipal.getRole());
+
+        userRepository.updateRefreshTokenAndLoginStatus(userPrincipal.getId(),
+                tokenDto.refreshToken(),
+                true);
 
 
         setSuccessWebResponse(response, tokenDto);
     }
 
-    private void setSuccessWebResponse(HttpServletResponse response, JwtTokenDto tokenDto) throws IOException {
+    private void setSuccessWebResponse(HttpServletResponse response, JwtTokenDto tokenDto)
+            throws IOException {
+
         CookieUtil.addCookie(response, "access_token", tokenDto.accessToken());
-        CookieUtil.addSecureCookie(response, "refresh_token", tokenDto.refreshToken(), jwtUtil.getRefreshTokenExpirePeriod());
+
+        CookieUtil.addSecureCookie(response,
+                "refresh_token", tokenDto.refreshToken(),
+                jwtUtil.getRefreshTokenExpirePeriod());
 
         response.sendRedirect("http://localhost:3000");
     }

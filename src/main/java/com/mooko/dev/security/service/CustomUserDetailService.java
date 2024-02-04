@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    @Override //여기서 디비 접근함.
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserRepository.UserSecurityForm user = userRepository.findSecurityFormBySerialId(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));

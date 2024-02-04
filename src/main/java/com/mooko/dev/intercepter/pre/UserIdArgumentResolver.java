@@ -16,11 +16,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterType().equals(Long.class)
                 && parameter.hasParameterAnnotation(UserId.class); //true or false
+
+        //UserId 어노테이션이 붙어있고 타입이 Long.class인 파라미터를 해석하여
+        //요청의 특정 속성(USER_ID)에서 값을 가져와 해당 파라미터의 인자로 제공.
     }
 
 

@@ -24,8 +24,10 @@ public class UserIdInterceptor implements HandlerInterceptor {
          * getAunthentication()
          *  -> 현재 인증된 사용자의 Authentication 객체를 반환.
           */
-
         request.setAttribute("USER_ID", authentication.getName());
+
+        // 요청처리를 계속 진행하도록 true 반환 (핸들러로 정상적으로 전달)
+        //return true;
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 }

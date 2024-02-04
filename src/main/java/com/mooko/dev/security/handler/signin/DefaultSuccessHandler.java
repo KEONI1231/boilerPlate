@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
-
 @Component
 @RequiredArgsConstructor
 public class DefaultSuccessHandler implements AuthenticationSuccessHandler {

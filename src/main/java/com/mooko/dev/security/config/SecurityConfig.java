@@ -46,11 +46,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .sessionManagement((sessionManagement) ->
+                .sessionManagement((sessionManagement) -> //세션 생성 STATELESS로 설정. 세션을 사용하지 않고 상태를 유지하지 않는 방식으로 인증.
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                .authorizeHttpRequests(registry ->
+                .authorizeHttpRequests(registry -> //특정 url 패턴에 대한 접근 권한. 인증 없이 접근 허용.
                         registry
                                 .requestMatchers(Constants.NO_NEED_AUTH_URLS.toArray(String[]::new)).permitAll()
                                 .anyRequest().authenticated()
@@ -62,7 +62,7 @@ public class SecurityConfig {
 //                                .logoutSuccessHandler(customSignOutResultHandler)
 //                )
 
-                .exceptionHandling(configurer ->
+                .exceptionHandling(configurer -> // 인증 실패 시 jwtAuthEntryPoint로 처리하고 접근 거부 시 jwtAccessDeniedHandler
                         configurer
                                 .authenticationEntryPoint(jwtAuthEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler)
